@@ -4,8 +4,9 @@ import * as THREE from 'three'
 
 /**
  * Các vật thể 3D bay bổng: Xen kẽ Trái tim pha lê 💖 và Vì Tinh Tú lấp lánh ⭐
+ * Kích thước nhỏ nhắn, tinh tế, óng ánh như bụi sao
  */
-const TOTAL_GEMS_COUNT = 32
+const TOTAL_GEMS_COUNT = 36
 
 // 1. Tạo hình Trái tim 3D mini đúng chiều
 function createMiniHeartShape() {
@@ -20,7 +21,7 @@ function createMiniHeartShape() {
   return shape
 }
 
-// 2. Tạo hình Vì Tinh Tú 3D (Ngôi sao 4 cánh / 5 cánh kim cương lấp lánh)
+// 2. Tạo hình Vì Tinh Tú 3D (Ngôi sao 5 cánh)
 function createStarShape(points = 5, outerRadius = 1.0, innerRadius = 0.42) {
   const shape = new THREE.Shape()
   const step = Math.PI / points
@@ -40,7 +41,7 @@ export default function MiniHearts() {
   const groupRef = useRef()
   const gemsData = useRef([])
 
-  // Hình học Trái tim
+  // Hình học Trái tim nhỏ nhắn, thanh thoát (scale = 0.075)
   const heartGeom = useMemo(() => {
     const shape = createMiniHeartShape()
     const geom = new THREE.ExtrudeGeometry(shape, {
@@ -52,11 +53,11 @@ export default function MiniHearts() {
       curveSegments: 24,
     })
     geom.center()
-    geom.scale(0.13, 0.13, 0.13)
+    geom.scale(0.075, 0.075, 0.075)
     return geom
   }, [])
 
-  // Hình học Vì Tinh Tú (Ngôi sao 5 cánh)
+  // Hình học Vì Tinh Tú nhỏ xinh lấp lánh (scale = 0.07)
   const starGeom = useMemo(() => {
     const shape = createStarShape(5, 1.0, 0.42)
     const geom = new THREE.ExtrudeGeometry(shape, {
@@ -68,7 +69,7 @@ export default function MiniHearts() {
       curveSegments: 20,
     })
     geom.center()
-    geom.scale(0.12, 0.12, 0.12)
+    geom.scale(0.07, 0.07, 0.07)
     return geom
   }, [])
 
@@ -98,15 +99,15 @@ export default function MiniHearts() {
       gemsData.current.push({
         isStar,
         position: new THREE.Vector3(
-          (Math.random() - 0.5) * 7.5,
+          (Math.random() - 0.5) * 8.0,
           -4.5 + Math.random() * 9,
           (Math.random() - 0.5) * 3.5
         ),
-        speed: 0.22 + Math.random() * 0.4,
-        rotSpeed: (Math.random() - 0.5) * 2.5,
+        speed: 0.2 + Math.random() * 0.4,
+        rotSpeed: (Math.random() - 0.5) * 2.2,
         wobbleSpeed: 1.0 + Math.random() * 1.8,
-        wobbleAmount: 0.2 + Math.random() * 0.35,
-        scale: 0.55 + Math.random() * 0.7,
+        wobbleAmount: 0.18 + Math.random() * 0.3,
+        scale: 0.5 + Math.random() * 0.5,
         phase: Math.random() * Math.PI * 2,
         twinkleSpeed: 2 + Math.random() * 4,
         color,
@@ -131,7 +132,7 @@ export default function MiniHearts() {
       // Reset khi bay quá cao
       if (data.position.y > 4.5) {
         data.position.y = -4.5
-        data.position.x = (Math.random() - 0.5) * 7.5
+        data.position.x = (Math.random() - 0.5) * 8.0
       }
 
       child.position.copy(data.position)

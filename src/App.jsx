@@ -104,7 +104,7 @@ export default function App() {
         x: 8 + Math.random() * 78,
         duration: 6.5 + Math.random() * 3.5,
         delay: Math.random() * 0.2,
-        scale: 0.85 + Math.random() * 0.2,
+        scale: 0.8 + Math.random() * 0.15,
         drift: (Math.random() - 0.5) * 30,
       }
     } else {
@@ -117,7 +117,7 @@ export default function App() {
         x: 10 + Math.random() * 75,
         duration: 5.8 + Math.random() * 3.0,
         delay: Math.random() * 0.2,
-        scale: 1.15 + Math.random() * 0.35,
+        scale: 0.85 + Math.random() * 0.25,
         drift: (Math.random() - 0.5) * 30,
       }
     }
