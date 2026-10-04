@@ -5,7 +5,12 @@ export default function MusicPlayer({ isAutoPlayRequested, onMusicStateChange })
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef(null)
 
-  // Khởi tạo audio từ file /music.mp3
+  // Đảm bảo dừng hoàn toàn tiếng synth cũ nếu còn sót lại
+  useEffect(() => {
+    musicBox.stop()
+  }, [])
+
+  // Khởi tạo audio duy nhất từ file /music.mp3
   useEffect(() => {
     const audio = new Audio('/music.mp3')
     audio.loop = true
@@ -13,80 +18,55 @@ export default function MusicPlayer({ isAutoPlayRequested, onMusicStateChange })
     audio.preload = 'auto'
     audioRef.current = audio
 
-    // Thử autoplay ngay khi load trang
-    const tryAutoplay = () => {
-      audio.play().then(() => {
-        setIsPlaying(true)
-        if (onMusicStateChange) onMusicStateChange(true)
-      }).catch(() => {
-        // Trình duyệt chặn autoplay -> Đợi cú chạm đầu tiên bất kỳ trên màn hình
-        const unlockAudio = () => {
-          audio.play().then(() => {
-            setIsPlaying(true)
-            if (onMusicStateChange) onMusicStateChange(true)
-          }).catch(() => {
-            musicBox.start()
-            setIsPlaying(true)
-            if (onMusicStateChange) onMusicStateChange(true)
-          })
-          window.removeEventListener('click', unlockAudio)
-          window.removeEventListener('touchstart', unlockAudio)
-          window.removeEventListener('keydown', unlockAudio)
-        }
-
-        window.addEventListener('click', unlockAudio, { once: true })
-        window.addEventListener('touchstart', unlockAudio, { once: true })
-        window.addEventListener('keydown', unlockAudio, { once: true })
-      })
-    }
-
-    tryAutoplay()
-
-    return () => {
-      audio.pause()
-      audioRef.current = null
-      musicBox.stop()
-    }
-  }, [onMusicStateChange])
-
-  // Khi có trigger từ ngoài (ví dụ bấm nút Mở quà hoặc chạm tim)
-  useEffect(() => {
-    if (isAutoPlayRequested && !isPlaying) {
-      startPlay()
-    }
-  }, [isAutoPlayRequested])
-
-  const startPlay = () => {
-    if (audioRef.current) {
-      audioRef.current.play().then(() => {
-        setIsPlaying(true)
-        if (onMusicStateChange) onMusicStateChange(true)
-      }).catch(() => {
-        musicBox.start()
-        setIsPlaying(true)
-        if (onMusicStateChange) onMusicStateChange(true)
-      })
-    } else {
-      musicBox.start()
+    const handlePlaySuccess = () => {
       setIsPlaying(true)
       if (onMusicStateChange) onMusicStateChange(true)
     }
-  }
 
-  const stopPlay = () => {
-    if (audioRef.current) {
-      audioRef.current.pause()
+    // Lắng nghe sự kiện chạm đầu tiên bất kỳ trên màn hình để mở khóa phát nhạc MP3
+    const unlockAndPlay = () => {
+      if (audioRef.current) {
+        audioRef.current.play().then(handlePlaySuccess).catch(() => {})
+      }
+      window.removeEventListener('click', unlockAndPlay)
+      window.removeEventListener('touchstart', unlockAndPlay)
     }
-    musicBox.stop()
-    setIsPlaying(false)
-    if (onMusicStateChange) onMusicStateChange(false)
-  }
+
+    window.addEventListener('click', unlockAndPlay, { once: true })
+    window.addEventListener('touchstart', unlockAndPlay, { once: true })
+
+    return () => {
+      window.removeEventListener('click', unlockAndPlay)
+      window.removeEventListener('touchstart', unlockAndPlay)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
+    }
+  }, [onMusicStateChange])
+
+  // Khi người dùng chạm vào trái tim
+  useEffect(() => {
+    if (isAutoPlayRequested && !isPlaying && audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true)
+        if (onMusicStateChange) onMusicStateChange(true)
+      }).catch(() => {})
+    }
+  }, [isAutoPlayRequested, isPlaying, onMusicStateChange])
 
   const toggleMusic = () => {
+    if (!audioRef.current) return
+
     if (isPlaying) {
-      stopPlay()
+      audioRef.current.pause()
+      setIsPlaying(false)
+      if (onMusicStateChange) onMusicStateChange(false)
     } else {
-      startPlay()
+      audioRef.current.play().then(() => {
+        setIsPlaying(true)
+        if (onMusicStateChange) onMusicStateChange(true)
+      }).catch(() => {})
     }
   }
 

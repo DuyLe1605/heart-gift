@@ -34,34 +34,10 @@ function playChimeSound(freqMultiplier = 1) {
   } catch (err) {}
 }
 
-/**
- * Âm thanh hợp âm thần tiên khi mở thẻ bài ma thuật
- */
 function playCardMagicSound() {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext
-    if (!AudioContext) return
-    const ctx = new AudioContext()
-
-    const chord = [523.25, 659.25, 783.99, 1046.50]
-    chord.forEach((freq, index) => {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-
-      osc.type = 'triangle'
-      osc.frequency.setValueAtTime(freq, ctx.currentTime + index * 0.08)
-
-      gain.gain.setValueAtTime(0.09, ctx.currentTime + index * 0.08)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + index * 0.08 + 0.6)
-
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-
-      osc.start(ctx.currentTime + index * 0.08)
-      osc.stop(ctx.currentTime + index * 0.08 + 0.6)
-    })
-  } catch (err) {}
+  // Tắt hợp âm synth để tránh bị lẫn vào bản nhạc piano MP3 chính
 }
+
 
 const gentleStickers = ['🌸', '✨', '💖', '🌷', '🦋', '⭐', '💫', '🎀']
 
