@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Scene from './components/Scene'
+import FortuneModal from './components/FortuneModal'
+import { fortuneCards } from './data/fortuneCards'
 
 /**
  * Hiệu ứng âm thanh ngọt ngào tinh thể bằng Web Audio API
@@ -31,10 +33,39 @@ function playChimeSound(freqMultiplier = 1) {
   } catch (err) {}
 }
 
+/**
+ * Âm thanh hợp âm thần tiên khi mở thẻ bài ma thuật
+ */
+function playCardMagicSound() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    if (!AudioContext) return
+    const ctx = new AudioContext()
+
+    const chord = [523.25, 659.25, 783.99, 1046.50] // C major arpeggio
+    chord.forEach((freq, index) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'triangle'
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + index * 0.08)
+
+      gain.gain.setValueAtTime(0.09, ctx.currentTime + index * 0.08)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + index * 0.08 + 0.6)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start(ctx.currentTime + index * 0.08)
+      osc.stop(ctx.currentTime + index * 0.08 + 0.6)
+    })
+  } catch (err) {}
+}
+
 // Sticker nhẹ nhàng lúc bình thường
 const gentleStickers = ['🌸', '✨', '💖', '🌷', '🦋', '⭐', '💫', '🎀']
 
-// Bộ sticker phong phú khi bấm tim
+// Bộ sticker phong phú khi tương tác
 const cuteStickers = [
   '💖', '🌸', '🎀', '🧸', '🍓', '🌷', '✨', '🍰', '🐱', '💫', '🍭', '🌻',
   '🎈', '🐇', '🌼', '⭐', '🌈', '🍒', '🧋', '💌'
@@ -61,30 +92,17 @@ const cuteFloatingTexts = [
   '🌈 Bình yên & rực rỡ',
 ]
 
-const bigMessages = [
-  'Mphuong xinh xỉuuu! ✨',
-  'Hôm nay vui vẻ nha! 🌸',
-  'Xinh xắn, đáng yêu 10 điểm! 💯',
-  'Nụ cười tỏa nắng luôn nè ☀️',
-  'Chúc Mphuong luôn rạng rỡ & may mắn 🍀',
-  'Xinh đẹp tuyệt vời ông mặt trời 🌟',
-  'Mphuong xinkk nhất quả đất! ✌️',
-  'Luôn tự tin và tỏa sáng nha! 💫',
-  'Hôm nay có ai khen Mphuong xinh chưa? Chưa thì đây khen nè! 😆💖',
-  'Ăn ngon ngủ ngoan, không thức khuya nha! 🌙',
-  'Cô gái siêu cute và nhiều năng lượng 🌷',
-  'Mong mọi điều dễ thương nhất sẽ đến với bạn! 🎀',
-]
-
 export default function App() {
   const [loading, setLoading] = useState(true)
   const [floatingItems, setFloatingItems] = useState([])
-  const [bigMsg, setBigMsg] = useState(bigMessages[0])
   const [hasTappedHeart, setHasTappedHeart] = useState(false)
-  const [bigMsgVisible, setBigMsgVisible] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
+  
+  // State quản lý Modal Bốc quẻ may mắn
+  const [isFortuneOpen, setIsFortuneOpen] = useState(false)
+  const [currentCard, setCurrentCard] = useState(fortuneCards[0])
+
   const itemIdRef = useRef(0)
-  const idleTimerRef = useRef(null)
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1600)
@@ -109,7 +127,7 @@ export default function App() {
         type: 'text',
         content: text,
         x: 8 + Math.random() * 78,
-        duration: 6.5 + Math.random() * 3.5, // Bay êm đềm, chậm rãi
+        duration: 6.5 + Math.random() * 3.5,
         delay: Math.random() * 0.2,
         scale: 0.85 + Math.random() * 0.2,
         drift: (Math.random() - 0.5) * 30,
@@ -130,12 +148,11 @@ export default function App() {
     }
   }, [])
 
-  // KHI CHƯA BẤM TRÁI TIM: Thả rất ít và thưa thớt (2.2s mới sinh 1 cái, tối đa 5-6 cái trên màn hình)
+  // KHI CHƯA BẤM TRÁI TIM: Thả rất ít và êm đềm
   useEffect(() => {
-    const intervalTime = hasTappedHeart ? 1200 : 2200
+    const intervalTime = hasTappedHeart ? 1400 : 2400
 
     const interval = setInterval(() => {
-      // Khi chưa bấm: sinh dạng ambient nhẹ nhàng
       const newItem = createItem(null, !hasTappedHeart)
       const maxCount = hasTappedHeart ? 16 : 6
 
@@ -149,40 +166,51 @@ export default function App() {
     return () => clearInterval(interval)
   }, [createItem, hasTappedHeart])
 
-  // CHẠM VÀO TRÁI TIM: BÙNG NỔ THÔNG ĐIỆP + STICKER BẤT NGỜ
+  // CHẠM VÀO TRÁI TIM: MỞ THẺ BÀI GACHA MAY MẮN
   const handleHeartTap = useCallback(() => {
     setHasTappedHeart(true)
 
-    if (soundEnabled) {
-      playChimeSound(1.2)
-    }
-
-    // Bắn chùm 8 item rực rỡ bay lên
-    for (let i = 0; i < 8; i++) {
+    // Bắn nhẹ chùm hạt sao & sticker lấp lánh
+    for (let i = 0; i < 6; i++) {
       setTimeout(() => {
         const item = createItem(i % 2 === 0 ? 'text' : 'sticker', false)
-        setFloatingItems((prev) => [...prev.slice(-20), item])
+        setFloatingItems((prev) => [...prev.slice(-18), item])
         setTimeout(() => {
           setFloatingItems((prev) => prev.filter((it) => it.id !== item.id))
         }, (item.duration + 0.5) * 1000)
-      }, i * 80)
+      }, i * 70)
     }
 
-    // Hiện câu chúc mới
-    const newMsg = bigMessages[Math.floor(Math.random() * bigMessages.length)]
-    setBigMsg(newMsg)
-    setBigMsgVisible(true)
+    // Chọn ngẫu nhiên 1 quẻ may mắn
+    const randomIndex = Math.floor(Math.random() * fortuneCards.length)
+    setCurrentCard(fortuneCards[randomIndex])
 
-    // Tự ẩn câu chúc sau 3.8s
-    if (idleTimerRef.current) clearTimeout(idleTimerRef.current)
-    idleTimerRef.current = setTimeout(() => {
-      setBigMsgVisible(false)
-      // Sau 2s trở về trạng thái yên ả ban đầu
-      setTimeout(() => setHasTappedHeart(false), 2000)
-    }, 3800)
+    // Sau nhịp tim nảy lên thì mở thẻ bài ma thuật
+    setTimeout(() => {
+      setIsFortuneOpen(true)
+      if (soundEnabled) {
+        playCardMagicSound()
+      }
+    }, 280)
   }, [createItem, soundEnabled])
 
-  // Chạm vào sticker/thông điệp đang bay: nổ bụp vui tai
+  // Bốc quẻ khác trong modal
+  const handleReroll = () => {
+    if (soundEnabled) playChimeSound(1.3)
+    let nextIndex
+    do {
+      nextIndex = Math.floor(Math.random() * fortuneCards.length)
+    } while (fortuneCards.length > 1 && fortuneCards[nextIndex].id === currentCard.id)
+    
+    setCurrentCard(fortuneCards[nextIndex])
+  }
+
+  // Đóng thẻ bài
+  const handleCloseFortune = () => {
+    setIsFortuneOpen(false)
+  }
+
+  // Chạm vào sticker/thông điệp đang bay
   const handleItemClick = (e, id) => {
     e.stopPropagation()
     if (soundEnabled) playChimeSound(1.4)
@@ -238,27 +266,25 @@ export default function App() {
         ))}
       </div>
 
-      {/* HƯỚNG DẪN CHẠM VÀO TRÁI TIM TINH TẾ */}
+      {/* HƯỚNG DẪN CHẠM VÀO TRÁI TIM ĐỂ BỐC QUẺ TINH TẾ */}
       <div className="interactive-cue-wrapper">
         <div
-          className={`heart-tap-guide ${hasTappedHeart || bigMsgVisible ? 'fade-out' : ''}`}
+          className={`heart-tap-guide ${isFortuneOpen ? 'fade-out' : ''}`}
           onClick={handleHeartTap}
         >
-          <span className="sparkle-icon">✨</span>
-          <span className="guide-text">Chạm khẽ vào trái tim nè</span>
+          <span className="sparkle-icon">🔮</span>
+          <span className="guide-text">Chạm vào tim để bốc quẻ may mắn nè</span>
           <span className="pulse-beacon"></span>
         </div>
-
-        {/* Hộp câu chúc ngẫu nhiên (nổi bật lên khi chạm tim) */}
-        <div
-          className={`bottom-message ${bigMsgVisible ? 'visible' : ''}`}
-          onClick={handleHeartTap}
-        >
-          <div className="message-badge">
-            <p>{bigMsg}</p>
-          </div>
-        </div>
       </div>
+
+      {/* MODAL THẺ BÀI MA THUẬT GACHA MAY MẮN (CUTE & WOW) */}
+      <FortuneModal
+        card={currentCard}
+        isOpen={isFortuneOpen}
+        onClose={handleCloseFortune}
+        onReroll={handleReroll}
+      />
 
       {/* Gợi ý xoay màn hình ở đáy */}
       <div className="tap-hint">
