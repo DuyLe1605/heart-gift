@@ -410,30 +410,147 @@ html, body, #root {
   }
 }
 
-/* ===== Music / Sound Toggle ===== */
-.music-toggle {
+/* ===== Cute Vinyl Music Player Widget ===== */
+.music-player-widget {
   position: fixed;
-  top: max(20px, env(safe-area-inset-top, 20px));
-  right: 20px;
-  z-index: 30;
-  width: 42px;
-  height: 42px;
+  top: max(18px, env(safe-area-inset-top, 18px));
+  right: 18px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vinyl-disc-btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 107, 161, 0.4);
-  background: rgba(20, 5, 30, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-size: 1.1rem;
+  border: 1.5px solid rgba(255, 182, 229, 0.5);
+  background: #11031c;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 45, 120, 0.3);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease, background 0.2s ease;
+  padding: 0;
+  transition: transform 0.2s ease;
 }
 
-.music-toggle:active {
-  transform: scale(0.9);
+.vinyl-disc-btn:active {
+  transform: scale(0.92);
+}
+
+.vinyl-disc-btn.spinning {
+  border-color: #ffd166;
+  box-shadow: 0 4px 20px rgba(255, 45, 120, 0.5), 0 0 15px rgba(255, 209, 102, 0.4);
+}
+
+.vinyl-disc-btn.spinning .vinyl-grooves {
+  animation: spin-record 3.5s linear infinite;
+}
+
+@keyframes spin-record {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Các đường rãnh đĩa than */
+.vinyl-grooves {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    #180524,
+    #180524 3px,
+    #250b36 4px,
+    #180524 5px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Nhãn tròn giữa đĩa */
+.vinyl-center-label {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2d78, #ffd166);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fff;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.music-icon {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+/* Nốt nhạc bay lơ lửng khi phát nhạc */
+.music-notes-container {
+  position: absolute;
+  top: -12px;
+  left: -8px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.note {
+  position: absolute;
+  font-size: 0.85rem;
+  opacity: 0;
+  animation: note-fly 2s ease-in-out infinite;
+}
+
+.note-1 {
+  animation-delay: 0s;
+  left: -4px;
+}
+
+.note-2 {
+  animation-delay: 0.7s;
+  left: 12px;
+}
+
+.note-3 {
+  animation-delay: 1.4s;
+  left: 28px;
+}
+
+@keyframes note-fly {
+  0% {
+    transform: translateY(0) scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-28px) translateX(-10px) scale(1.1) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+/* Tag label nhỏ mờ ảo */
+.music-label-tag {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff0f5;
+  background: rgba(20, 5, 30, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 182, 229, 0.25);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.85;
 }
 
 /* ==========================================================================

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Scene from './components/Scene'
 import FortuneModal from './components/FortuneModal'
+import MusicPlayer from './components/MusicPlayer'
 import { fortuneCards } from './data/fortuneCards'
 
 /**
@@ -236,15 +237,8 @@ export default function App() {
         <div className="subtitle">✨ A Special Gift For You ✨</div>
       </div>
 
-      {/* Nút bật/tắt âm thanh chuông */}
-      <button
-        className="music-toggle"
-        onClick={() => setSoundEnabled((prev) => !prev)}
-        title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
-        aria-label="Toggle sound"
-      >
-        {soundEnabled ? '🔔' : '🔕'}
-      </button>
+      {/* Trình phát nhạc Mini Đĩa Than Siêu Cute */}
+      <MusicPlayer isAutoPlayRequested={hasTappedHeart} />
 
       {/* Thông điệp & Sticker bay lên */}
       <div className="floating-items-container">
