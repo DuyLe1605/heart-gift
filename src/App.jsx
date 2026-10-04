@@ -43,7 +43,7 @@ function playCardMagicSound() {
     if (!AudioContext) return
     const ctx = new AudioContext()
 
-    const chord = [523.25, 659.25, 783.99, 1046.50] // C major arpeggio
+    const chord = [523.25, 659.25, 783.99, 1046.50]
     chord.forEach((freq, index) => {
       const osc = ctx.createOscillator()
       const gain = ctx.createGain()
@@ -63,10 +63,8 @@ function playCardMagicSound() {
   } catch (err) {}
 }
 
-// Sticker nhẹ nhàng lúc bình thường
 const gentleStickers = ['🌸', '✨', '💖', '🌷', '🦋', '⭐', '💫', '🎀']
 
-// Bộ sticker phong phú khi tương tác
 const cuteStickers = [
   '💖', '🌸', '🎀', '🧸', '🍓', '🌷', '✨', '🍰', '🐱', '💫', '🍭', '🌻',
   '🎈', '🐇', '🌼', '⭐', '🌈', '🍒', '🧋', '💌'
@@ -94,10 +92,11 @@ const cuteFloatingTexts = [
 ]
 
 export default function App() {
-  const [loading, setLoading] = useState(true)
+  const [hasEntered, setHasEntered] = useState(false)
   const [floatingItems, setFloatingItems] = useState([])
   const [hasTappedHeart, setHasTappedHeart] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
+  const [musicPlayTrigger, setMusicPlayTrigger] = useState(false)
   
   // State quản lý Modal Bốc quẻ may mắn
   const [isFortuneOpen, setIsFortuneOpen] = useState(false)
@@ -105,16 +104,17 @@ export default function App() {
 
   const itemIdRef = useRef(0)
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1600)
-    return () => clearTimeout(timer)
-  }, [])
+  // Người dùng chạm mở quà -> Kích hoạt nhạc ngay tức khắc
+  const handleEnterExperience = () => {
+    setHasEntered(true)
+    setMusicPlayTrigger(true)
+    playChimeSound(1.2)
+  }
 
   // Hàm sinh item (thông điệp hoặc sticker)
   const createItem = useCallback((forceType = null, isAmbient = false) => {
     const id = itemIdRef.current++
     
-    // Nếu là lúc chưa bấm (ambient): 85% là sticker nhẹ, chỉ 15% là text ngắn
     const isText = forceType 
       ? forceType === 'text' 
       : isAmbient 
@@ -149,8 +149,10 @@ export default function App() {
     }
   }, [])
 
-  // KHI CHƯA BẤM TRÁI TIM: Thả rất ít và êm đềm
+  // Sinh item bay lơ lửng khi đã mở quà
   useEffect(() => {
+    if (!hasEntered) return
+
     const intervalTime = hasTappedHeart ? 1400 : 2400
 
     const interval = setInterval(() => {
@@ -165,11 +167,12 @@ export default function App() {
     }, intervalTime)
 
     return () => clearInterval(interval)
-  }, [createItem, hasTappedHeart])
+  }, [createItem, hasTappedHeart, hasEntered])
 
   // CHẠM VÀO TRÁI TIM: MỞ THẺ BÀI GACHA MAY MẮN
   const handleHeartTap = useCallback(() => {
     setHasTappedHeart(true)
+    setMusicPlayTrigger(true)
 
     // Bắn nhẹ chùm hạt sao & sticker lấp lánh
     for (let i = 0; i < 6; i++) {
@@ -206,7 +209,6 @@ export default function App() {
     setCurrentCard(fortuneCards[nextIndex])
   }
 
-  // Đóng thẻ bài
   const handleCloseFortune = () => {
     setIsFortuneOpen(false)
   }
@@ -220,11 +222,18 @@ export default function App() {
 
   return (
     <>
-      {/* Loading Screen */}
-      <div className={`loading-screen ${!loading ? 'hidden' : ''}`}>
-        <div className="loading-heart" />
-        <div className="loading-text">Đang chuẩn bị điều bất ngờ... ✨</div>
-      </div>
+      {/* MÀN HÌNH CHÀO ĐÓN MỞ QUÀ & BẬT NHẠC TỰ ĐỘNG (ĐẢM BẢO 100% CÓ NHẠC TRÊN iOS) */}
+      {!hasEntered && (
+        <div className="welcome-gate-screen" onClick={handleEnterExperience}>
+          <div className="welcome-heart-icon">💖</div>
+          <h2 className="welcome-title">Món quà nhỏ gửi Mphuong ✨</h2>
+          <p className="welcome-desc">Đã chuẩn bị sẵn giai điệu lãng mạn dành cho bạn</p>
+          <button className="welcome-enter-btn">
+            <span>🎁 Chạm để mở quà & nghe nhạc 🎶</span>
+          </button>
+          <span className="welcome-tip">Chạm bất kỳ đâu trên màn hình để mở</span>
+        </div>
+      )}
 
       {/* 3D Canvas */}
       <div className="canvas-container">
@@ -238,7 +247,7 @@ export default function App() {
       </div>
 
       {/* Trình phát nhạc Mini Đĩa Than Siêu Cute */}
-      <MusicPlayer isAutoPlayRequested={hasTappedHeart} />
+      <MusicPlayer isAutoPlayRequested={musicPlayTrigger} />
 
       {/* Thông điệp & Sticker bay lên */}
       <div className="floating-items-container">
@@ -272,7 +281,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* MODAL THẺ BÀI MA THUẬT GACHA MAY MẮN (CUTE & WOW) */}
+      {/* MODAL THẺ BÀI MA THUẬT GACHA MAY MẮN */}
       <FortuneModal
         card={currentCard}
         isOpen={isFortuneOpen}

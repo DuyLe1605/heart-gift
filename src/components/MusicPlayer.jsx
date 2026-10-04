@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { musicBox } from '../utils/musicBox'
 
-export default function MusicPlayer({ isAutoPlayRequested }) {
+export default function MusicPlayer({ isAutoPlayRequested, onMusicStateChange }) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [useMp3, setUseMp3] = useState(false)
   const audioRef = useRef(null)
 
   // Khởi tạo audio từ file /music.mp3
@@ -11,34 +10,46 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
     const audio = new Audio('/music.mp3')
     audio.loop = true
     audio.volume = 0.55
-
-    const handleCanPlay = () => {
-      setUseMp3(true)
-    }
-
-    const handleError = () => {
-      // Nếu file MP3 lỗi hoặc không tải được -> chuyển sang Hộp nhạc Kalimba
-      setUseMp3(false)
-    }
-
-    audio.addEventListener('canplay', handleCanPlay)
-    audio.addEventListener('loadeddata', handleCanPlay)
-    audio.addEventListener('error', handleError)
-    audio.load()
-
+    audio.preload = 'auto'
     audioRef.current = audio
 
+    // Thử autoplay ngay khi load trang
+    const tryAutoplay = () => {
+      audio.play().then(() => {
+        setIsPlaying(true)
+        if (onMusicStateChange) onMusicStateChange(true)
+      }).catch(() => {
+        // Trình duyệt chặn autoplay -> Đợi cú chạm đầu tiên bất kỳ trên màn hình
+        const unlockAudio = () => {
+          audio.play().then(() => {
+            setIsPlaying(true)
+            if (onMusicStateChange) onMusicStateChange(true)
+          }).catch(() => {
+            musicBox.start()
+            setIsPlaying(true)
+            if (onMusicStateChange) onMusicStateChange(true)
+          })
+          window.removeEventListener('click', unlockAudio)
+          window.removeEventListener('touchstart', unlockAudio)
+          window.removeEventListener('keydown', unlockAudio)
+        }
+
+        window.addEventListener('click', unlockAudio, { once: true })
+        window.addEventListener('touchstart', unlockAudio, { once: true })
+        window.addEventListener('keydown', unlockAudio, { once: true })
+      })
+    }
+
+    tryAutoplay()
+
     return () => {
-      audio.removeEventListener('canplay', handleCanPlay)
-      audio.removeEventListener('loadeddata', handleCanPlay)
-      audio.removeEventListener('error', handleError)
       audio.pause()
       audioRef.current = null
       musicBox.stop()
     }
-  }, [])
+  }, [onMusicStateChange])
 
-  // Tự động bật nhạc khi chạm vào trái tim lần đầu tiên
+  // Khi có trigger từ ngoài (ví dụ bấm nút Mở quà hoặc chạm tim)
   useEffect(() => {
     if (isAutoPlayRequested && !isPlaying) {
       startPlay()
@@ -49,14 +60,16 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
     if (audioRef.current) {
       audioRef.current.play().then(() => {
         setIsPlaying(true)
+        if (onMusicStateChange) onMusicStateChange(true)
       }).catch(() => {
-        // Fallback sang Kalimba nếu trình duyệt chặn phát MP3 tự động
         musicBox.start()
         setIsPlaying(true)
+        if (onMusicStateChange) onMusicStateChange(true)
       })
     } else {
       musicBox.start()
       setIsPlaying(true)
+      if (onMusicStateChange) onMusicStateChange(true)
     }
   }
 
@@ -66,6 +79,7 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
     }
     musicBox.stop()
     setIsPlaying(false)
+    if (onMusicStateChange) onMusicStateChange(false)
   }
 
   const toggleMusic = () => {
