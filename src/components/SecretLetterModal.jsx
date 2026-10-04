@@ -24,13 +24,13 @@ export default function SecretLetterModal({ isOpen, onClose }) {
             <h3 className="letter-greeting">Gửi Mphuong,</h3>
 
             <p className="letter-paragraph">
-              Dành tặng bạn một góc nhỏ thật dịu dàng giữa những ngày bận rộn. 
-              Chúc bạn luôn giữ được nụ cười tươi tắn và năng lượng tích cực, 
-              vì nụ cười của bạn thực sự rất tỏa sáng đấy! ✨
+              Dành tặng em một góc nhỏ thật dịu dàng giữa những ngày bận rộn. 
+              Chúc em luôn giữ được nụ cười tươi tắn và năng lượng tích cực, 
+              vì nụ cười của em thực sự rất tỏa sáng đấy! ✨
             </p>
 
             <p className="letter-paragraph">
-              Mong rằng mỗi ngày thức dậy, bạn đều tìm thấy thật nhiều niềm vui nhỏ bé: 
+              Mong rằng mỗi ngày thức dậy, em đều tìm thấy thật nhiều niềm vui nhỏ bé: 
               một buổi sáng mát mẻ, một ly đồ uống ngọt ngào, hay chỉ đơn giản là một ngày mọi thứ đều suôn sẻ. 
               Nếu có những lúc thấy mệt mỏi hay áp lực, nhớ cho bản thân được nghỉ ngơi, 
               ăn món mình thích và ngủ thật ngon nhé. 🌸

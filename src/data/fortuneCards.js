@@ -19,8 +19,8 @@ export const fortuneCards = [
     title: 'Vạn Sự Như Ý',
     icon: '🍀',
     stats: { beauty: '10/10 💖', luck: 'MAX 100%', mood: 'Siêu chill' },
-    quote: 'Mọi điều bạn làm hôm nay đều có quý nhân phù trợ, học tập và công việc trôi chảy êm ru.',
-    tip: 'Bí kíp: Tin vào bản thân, bạn giỏi và tài năng hơn bạn nghĩ rất nhiều đấy! ✨',
+    quote: 'Mọi điều em làm hôm nay đều có quý nhân phù trợ, học tập và công việc trôi chảy êm ru.',
+    tip: 'Bí kíp: Tin vào bản thân, em giỏi và tài năng hơn em nghĩ rất nhiều đấy! ✨',
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ export const fortuneCards = [
     icon: '🎀',
     stats: { beauty: 'Vô cực ∞', luck: '95%', mood: 'Dễ thương' },
     quote: 'Sự đáng yêu của Mphuong hôm nay đủ sức làm tan chảy cả mùa đông băng giá.',
-    tip: 'Bí kíp: Cứ là chính mình, phiên bản tự tin và yêu đời nhất của bạn là tuyệt nhất! 🌷',
+    tip: 'Bí kíp: Cứ là chính mình, phiên bản tự tin và yêu đời nhất của em là tuyệt nhất! 🌷',
   },
   {
     id: 5,
@@ -49,8 +49,8 @@ export const fortuneCards = [
     title: 'Lá Chắn Anti-Tiêu Cực',
     icon: '🛡️',
     stats: { beauty: '10/10 ✨', luck: '90%', mood: 'Bình yên' },
-    quote: 'Mọi muộn phiền hay drama hôm nay sẽ tự động dạt sang hai bên, không thể chạm tới bạn!',
-    tip: 'Bí kíp: Hãy chỉ tập trung vào những điều làm bạn vui và những người yêu quý bạn. 🌈',
+    quote: 'Mọi muộn phiền hay drama hôm nay sẽ tự động dạt sang hai bên, không thể chạm tới em!',
+    tip: 'Bí kíp: Hãy chỉ tập trung vào những điều làm em vui và những người yêu quý em. 🌈',
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ export const fortuneCards = [
     title: 'Bình Yên & Rực Rỡ',
     icon: '🍰',
     stats: { beauty: 'Xinh 100%', luck: '92%', mood: 'Hạnh phúc' },
-    quote: 'Hôm nay sẽ có một niềm vui bất ngờ nho nhỏ tìm đến bạn, đón nhận với nụ cười nhé!',
+    quote: 'Hôm nay sẽ có một niềm vui bất ngờ nho nhỏ tìm đến em, đón nhận với nụ cười nhé!',
     tip: 'Bí kíp: Nghe một bản nhạc êm dịu lúc chiều tà, cuộc sống này dễ thương lắm. 🎶',
   },
   {
@@ -79,7 +79,7 @@ export const fortuneCards = [
     title: 'Vitamin Nụ Cười',
     icon: '🥰',
     stats: { beauty: '11/10 💯', luck: '99%', mood: 'Năng lượng' },
-    quote: 'Nụ cười của bạn chính là nguồn năng lượng tích cực lan tỏa đến tất cả mọi người xung quanh.',
+    quote: 'Nụ cười của em chính là nguồn năng lượng tích cực lan tỏa đến tất cả mọi người xung quanh.',
     tip: 'Bí kíp: Soi gương và tự khen mình xinh một câu trước khi ra khỏi nhà nha! 🪞✨',
   },
 ]
