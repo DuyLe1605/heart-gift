@@ -267,111 +267,71 @@ html, body, #root {
   backdrop-filter: blur(8px);
 }
 
-/* ===== Welcome Gate Screen (100% Audio Unlock on First Touch) ===== */
-.welcome-gate-screen {
+/* ===== Loading Screen ===== */
+.loading-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 2000;
-  background: radial-gradient(circle at center, rgba(35, 10, 50, 0.96) 0%, rgba(9, 0, 20, 0.98) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: var(--color-bg-dark);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  text-align: center;
-  cursor: pointer;
-  animation: welcome-fade-in 0.6s ease forwards;
+  transition: opacity 0.8s var(--ease-smooth), visibility 0.8s;
 }
 
-@keyframes welcome-fade-in {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.welcome-heart-icon {
-  font-size: 3.5rem;
-  filter: drop-shadow(0 0 25px rgba(255, 45, 120, 0.7));
-  animation: heartbeat-glow 1.4s ease-in-out infinite;
-  margin-bottom: 16px;
+.loading-heart {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  animation: heartbeat 1.2s ease-in-out infinite;
 }
 
-@keyframes heartbeat-glow {
-  0%, 100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 20px rgba(255, 45, 120, 0.6));
-  }
-  25% {
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 35px rgba(255, 45, 120, 0.9));
-  }
-  40% {
-    transform: scale(1.05);
-  }
-  60% {
-    transform: scale(1.18);
-    filter: drop-shadow(0 0 40px rgba(255, 45, 120, 1));
-  }
+.loading-heart::before,
+.loading-heart::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 40px;
+  background: var(--color-primary);
+  border-radius: 25px 25px 0 0;
 }
 
-.welcome-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.2rem, 7vw, 3.2rem);
-  font-weight: 700;
-  background: linear-gradient(135deg, #ffffff, #ffd166, #ffb6e5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
-  line-height: 1.2;
+.loading-heart::before {
+  left: 25px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
 }
 
-.welcome-desc {
+.loading-heart::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  20% { transform: scale(1.2); }
+  40% { transform: scale(1); }
+  60% { transform: scale(1.15); }
+  80% { transform: scale(1); }
+}
+
+.loading-text {
+  margin-top: 24px;
   font-family: var(--font-body);
-  font-size: clamp(0.85rem, 3.2vw, 1rem);
-  color: var(--color-text-muted);
-  margin-bottom: 24px;
-  max-width: 320px;
-  letter-spacing: 0.3px;
-}
-
-.welcome-enter-btn {
-  background: linear-gradient(135deg, #ff2d78, #ff6ba1, #ffd166);
-  background-size: 200% 200%;
-  color: #fff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 999px;
-  font-family: var(--font-body);
-  font-size: clamp(0.95rem, 3.8vw, 1.1rem);
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 8px 30px rgba(255, 45, 120, 0.5), 0 0 20px rgba(255, 209, 102, 0.3) inset;
-  animation: shimmer-btn 3s ease infinite;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.welcome-enter-btn:active {
-  transform: scale(0.95);
-}
-
-@keyframes shimmer-btn {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-.welcome-tip {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  color: rgba(255, 240, 245, 0.5);
-  margin-top: 14px;
-  letter-spacing: 0.8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-primary-light);
 }
 
 /* ===== Floating Messages & Stickers Container ===== */

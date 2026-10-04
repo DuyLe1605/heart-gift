@@ -92,7 +92,7 @@ const cuteFloatingTexts = [
 ]
 
 export default function App() {
-  const [hasEntered, setHasEntered] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [floatingItems, setFloatingItems] = useState([])
   const [hasTappedHeart, setHasTappedHeart] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(true)
@@ -104,12 +104,10 @@ export default function App() {
 
   const itemIdRef = useRef(0)
 
-  // Người dùng chạm mở quà -> Kích hoạt nhạc ngay tức khắc
-  const handleEnterExperience = () => {
-    setHasEntered(true)
-    setMusicPlayTrigger(true)
-    playChimeSound(1.2)
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Hàm sinh item (thông điệp hoặc sticker)
   const createItem = useCallback((forceType = null, isAmbient = false) => {
@@ -149,10 +147,8 @@ export default function App() {
     }
   }, [])
 
-  // Sinh item bay lơ lửng khi đã mở quà
+  // Sinh item bay lơ lửng êm đềm
   useEffect(() => {
-    if (!hasEntered) return
-
     const intervalTime = hasTappedHeart ? 1400 : 2400
 
     const interval = setInterval(() => {
@@ -167,12 +163,12 @@ export default function App() {
     }, intervalTime)
 
     return () => clearInterval(interval)
-  }, [createItem, hasTappedHeart, hasEntered])
+  }, [createItem, hasTappedHeart])
 
-  // CHẠM VÀO TRÁI TIM: MỞ THẺ BÀI GACHA MAY MẮN
+  // CHẠM VÀO TRÁI TIM: TỰ ĐỘNG BẬT NHẠC + MỞ THẺ BÀI GACHA
   const handleHeartTap = useCallback(() => {
     setHasTappedHeart(true)
-    setMusicPlayTrigger(true)
+    setMusicPlayTrigger(true) // Tự động phát nhạc ngay khi người dùng bấm trái tim!
 
     // Bắn nhẹ chùm hạt sao & sticker lấp lánh
     for (let i = 0; i < 6; i++) {
@@ -222,20 +218,13 @@ export default function App() {
 
   return (
     <>
-      {/* MÀN HÌNH CHÀO ĐÓN MỞ QUÀ & BẬT NHẠC TỰ ĐỘNG (ĐẢM BẢO 100% CÓ NHẠC TRÊN iOS) */}
-      {!hasEntered && (
-        <div className="welcome-gate-screen" onClick={handleEnterExperience}>
-          <div className="welcome-heart-icon">💖</div>
-          <h2 className="welcome-title">Món quà nhỏ gửi Mphuong ✨</h2>
-          <p className="welcome-desc">Đã chuẩn bị sẵn giai điệu lãng mạn dành cho bạn</p>
-          <button className="welcome-enter-btn">
-            <span>🎁 Chạm để mở quà & nghe nhạc 🎶</span>
-          </button>
-          <span className="welcome-tip">Chạm bất kỳ đâu trên màn hình để mở</span>
-        </div>
-      )}
+      {/* Loading Screen nhẹ nhàng ban đầu */}
+      <div className={`loading-screen ${!loading ? 'hidden' : ''}`}>
+        <div className="loading-heart" />
+        <div className="loading-text">Đang chuẩn bị điều bất ngờ... ✨</div>
+      </div>
 
-      {/* 3D Canvas */}
+      {/* 3D Canvas - Vào thẳng không gian trái tim */}
       <div className="canvas-container">
         <Scene onHeartTap={handleHeartTap} />
       </div>
@@ -249,7 +238,7 @@ export default function App() {
       {/* Trình phát nhạc Mini Đĩa Than Siêu Cute */}
       <MusicPlayer isAutoPlayRequested={musicPlayTrigger} />
 
-      {/* Thông điệp & Sticker bay lên */}
+      {/* Thông điệp & Sticker bay lên êm dịu */}
       <div className="floating-items-container">
         {floatingItems.map((item) => (
           <div
@@ -269,7 +258,7 @@ export default function App() {
         ))}
       </div>
 
-      {/* HƯỚNG DẪN CHẠM VÀO TRÁI TIM ĐỂ BỐC QUẺ TINH TẾ */}
+      {/* HƯỚNG DẪN CHẠM VÀO TRÁI TIM ĐỂ BỐC QUẺ & NGHE NHẠC */}
       <div className="interactive-cue-wrapper">
         <div
           className={`heart-tap-guide ${isFortuneOpen ? 'fade-out' : ''}`}
