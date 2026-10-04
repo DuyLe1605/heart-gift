@@ -6,33 +6,39 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
   const [useMp3, setUseMp3] = useState(false)
   const audioRef = useRef(null)
 
-  // Kiểm tra xem có file /music.mp3 trong thư mục public không
+  // Khởi tạo audio từ file /music.mp3
   useEffect(() => {
     const audio = new Audio('/music.mp3')
     audio.loop = true
-    audio.volume = 0.5
+    audio.volume = 0.55
 
-    audio.addEventListener('canplaythrough', () => {
+    const handleCanPlay = () => {
       setUseMp3(true)
-    })
+    }
 
-    audio.addEventListener('error', () => {
-      // Không có file MP3 -> Dùng Music Box Kalimba Synth
+    const handleError = () => {
+      // Nếu file MP3 lỗi hoặc không tải được -> chuyển sang Hộp nhạc Kalimba
       setUseMp3(false)
-    })
+    }
+
+    audio.addEventListener('canplay', handleCanPlay)
+    audio.addEventListener('loadeddata', handleCanPlay)
+    audio.addEventListener('error', handleError)
+    audio.load()
 
     audioRef.current = audio
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current = null
-      }
+      audio.removeEventListener('canplay', handleCanPlay)
+      audio.removeEventListener('loadeddata', handleCanPlay)
+      audio.removeEventListener('error', handleError)
+      audio.pause()
+      audioRef.current = null
       musicBox.stop()
     }
   }, [])
 
-  // Bật nhạc khi có yêu cầu (ví dụ khi chạm vào trái tim lần đầu tiên)
+  // Tự động bật nhạc khi chạm vào trái tim lần đầu tiên
   useEffect(() => {
     if (isAutoPlayRequested && !isPlaying) {
       startPlay()
@@ -40,11 +46,11 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
   }, [isAutoPlayRequested])
 
   const startPlay = () => {
-    if (useMp3 && audioRef.current) {
+    if (audioRef.current) {
       audioRef.current.play().then(() => {
         setIsPlaying(true)
       }).catch(() => {
-        // Fallback sang Kalimba nếu MP3 bị chặn
+        // Fallback sang Kalimba nếu trình duyệt chặn phát MP3 tự động
         musicBox.start()
         setIsPlaying(true)
       })
@@ -55,7 +61,7 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
   }
 
   const stopPlay = () => {
-    if (useMp3 && audioRef.current) {
+    if (audioRef.current) {
       audioRef.current.pause()
     }
     musicBox.stop()
@@ -75,10 +81,10 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
       <button
         className={`vinyl-disc-btn ${isPlaying ? 'spinning' : ''}`}
         onClick={toggleMusic}
-        title={isPlaying ? 'Tạm dừng nhạc' : 'Bật nhạc hộp nhạc du dương'}
+        title={isPlaying ? 'Tạm dừng nhạc' : 'Bật nhạc lãng mạn'}
         aria-label="Toggle music"
       >
-        {/* Nốt nhạc bay lơ lửng khi đang phát nhạc */}
+        {/* Nốt nhạc bay lơ lửng khi phát nhạc */}
         {isPlaying && (
           <div className="music-notes-container">
             <span className="note note-1">🎵</span>
@@ -97,7 +103,7 @@ export default function MusicPlayer({ isAutoPlayRequested }) {
 
       {/* Label nhỏ tinh tế */}
       <span className="music-label-tag">
-        {isPlaying ? 'Đang phát nhạc 🎶' : 'Bật nhạc 🎵'}
+        {isPlaying ? 'Giai điệu lãng mạn 🎶' : 'Bật nhạc 🎵'}
       </span>
     </div>
   )
