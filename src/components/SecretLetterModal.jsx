@@ -24,25 +24,26 @@ export default function SecretLetterModal({ isOpen, onClose }) {
             <h3 className="letter-greeting">Gửi Mphuong,</h3>
 
             <p className="letter-paragraph">
-              Dành tặng em một góc nhỏ thật dịu dàng giữa những ngày bận rộn. 
-              Chúc em luôn giữ được nụ cười tươi tắn và năng lượng tích cực, 
-              vì nụ cười của em thực sự rất tỏa sáng đấy! ✨
+              Dành tặng cô gái ngành Du lịch & Khách sạn một góc nhỏ thật dịu dàng giữa những ngày bận rộn. 
+              Biết là công việc ngành dịch vụ nhiều lúc vất vả lắm: những ca làm đứng mỏi rã rời đôi chân, 
+              phải luôn giữ nụ cười thân thiện đón tiếp từng vị khách, cả những ngày vừa đi làm vừa ôn thi nhiều áp lực nữa.
             </p>
 
             <p className="letter-paragraph">
-              Mong rằng mỗi ngày thức dậy, em đều tìm thấy thật nhiều niềm vui nhỏ bé: 
-              một buổi sáng mát mẻ, một ly đồ uống ngọt ngào, hay chỉ đơn giản là một ngày mọi thứ đều suôn sẻ. 
-              Nếu có những lúc thấy mệt mỏi hay áp lực, nhớ cho bản thân được nghỉ ngơi, 
-              ăn món mình thích và ngủ thật ngon nhé. 🌸
+              Nhưng em biết không, sự ân cần, chu đáo và nụ cười rạng rỡ của em chính là điều tuyệt vời nhất 
+              mang lại sự ấm áp cho mọi người xung quanh. 
+              Người làm du lịch là người đem lại niềm vui và kỷ niệm đẹp cho bao hành trình của người khác, 
+              nên em cũng xứng đáng nhận lại gấp mười lần niềm vui và sự dịu dàng như thế! ✨
             </p>
 
             <p className="letter-paragraph">
-              Cứ tự tin là chính mình, phiên bản rạng rỡ và đáng yêu nhất. 
-              Chúc Mphuong luôn bình yên, may mắn và ngập tràn hạnh phúc! 🌷
+              Sau những giờ đứng ca mệt nhoài, về nhà nhớ ngâm chân nước ấm, ăn món thật ngon và ngủ một giấc thật sâu nhé. 
+              Mong rằng mỗi ca làm của em đều trôi qua êm ả, gặp toàn khách dễ thương và được đánh giá 5 sao. 
+              Chúc cô quản lý khách sạn tương lai luôn vững tin, xinh đẹp và tỏa sáng trên con đường em đã chọn! 🌷✈️🏨
             </p>
 
             <div className="letter-signature">
-              <span className="signature-date">— Một ngày thật đẹp —</span>
+              <span className="signature-date">— Luôn ủng hộ và cổ vũ em —</span>
               <span className="signature-name">From someone who cares ✨</span>
             </div>
           </div>
