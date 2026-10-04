@@ -1,5 +1,5 @@
 /* ===== Global Reset & Design System ===== */
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Itim&family=Patrick+Hand&family=Quicksand:wght@400;500;600;700&display=swap');
 
 :root {
   --color-bg-dark: #090014;
@@ -10,7 +10,7 @@
   --color-text: #fff0f5;
   --color-text-muted: rgba(255, 240, 245, 0.7);
   --font-display: 'Dancing Script', cursive;
-  --font-handwriting: 'Caveat', 'Dancing Script', cursive;
+  --font-handwriting: 'Itim', 'Patrick Hand', cursive;
   --font-body: 'Quicksand', sans-serif;
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1030,7 +1030,7 @@ html, body, #root {
 }
 
 .letter-greeting {
-  font-family: var(--font-handwriting);
+  font-family: var(--font-display);
   font-size: 2.1rem;
   font-weight: 700;
   color: #800f2f;
@@ -1040,13 +1040,13 @@ html, body, #root {
 
 .letter-paragraph {
   font-family: var(--font-handwriting);
-  font-size: clamp(1.16rem, 4.3vw, 1.34rem);
-  line-height: 1.62;
-  color: #3d001e;
-  font-weight: 600;
+  font-size: clamp(1.04rem, 3.9vw, 1.18rem);
+  line-height: 1.82;
+  color: #240012;
+  font-weight: 500;
   margin-bottom: 14px;
   text-align: left;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.25px;
 }
 
 .letter-signature {
@@ -1059,14 +1059,14 @@ html, body, #root {
 
 .signature-date {
   font-family: var(--font-handwriting);
-  font-size: 1.1rem;
-  color: #a4133c;
+  font-size: 0.98rem;
+  color: #8a1030;
   font-style: italic;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .signature-name {
-  font-family: var(--font-handwriting);
+  font-family: var(--font-display);
   font-size: 1.65rem;
   font-weight: 700;
   color: #800f2f;
@@ -1084,13 +1084,13 @@ html, body, #root {
   border: none;
   background: linear-gradient(135deg, #a4133c, #c9184a, #ff4d6d);
   color: #fff;
-  font-family: var(--font-handwriting);
-  font-size: 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(164, 19, 60, 0.35);
   transition: all 0.2s ease;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .letter-fold-btn:hover, .letter-fold-btn:active {
