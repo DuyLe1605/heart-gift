@@ -70,35 +70,6 @@ export default function MusicPlayer({ isAutoPlayRequested, onMusicStateChange })
     }
   }
 
-  return (
-    <div className="music-player-widget">
-      <button
-        className={`vinyl-disc-btn ${isPlaying ? 'spinning' : ''}`}
-        onClick={toggleMusic}
-        title={isPlaying ? 'Tạm dừng nhạc' : 'Bật nhạc lãng mạn'}
-        aria-label="Toggle music"
-      >
-        {/* Nốt nhạc bay lơ lửng khi phát nhạc */}
-        {isPlaying && (
-          <div className="music-notes-container">
-            <span className="note note-1">🎵</span>
-            <span className="note note-2">🎶</span>
-            <span className="note note-3">✨</span>
-          </div>
-        )}
-
-        {/* Thiết kế Đĩa than Mini */}
-        <div className="vinyl-grooves">
-          <div className="vinyl-center-label">
-            <span className="music-icon">{isPlaying ? '🎧' : '🎵'}</span>
-          </div>
-        </div>
-      </button>
-
-      {/* Label nhỏ tinh tế */}
-      <span className="music-label-tag">
-        {isPlaying ? 'Giai điệu lãng mạn 🎶' : 'Bật nhạc 🎵'}
-      </span>
-    </div>
-  )
+  // Bỏ UI theo yêu cầu của người dùng, toàn bộ logic phát nhạc chạy ngầm mượt mà
+  return null
 }

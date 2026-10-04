@@ -238,31 +238,36 @@ export default function App() {
         ))}
       </div>
 
-      {/* HƯỚNG DẪN CHẠM VÀO TRÁI TIM ĐỂ BỐC QUẺ & NGHE NHẠC */}
-      <div className="interactive-cue-wrapper">
-        <div
-          className={`heart-tap-guide ${isFortuneOpen ? 'fade-out' : ''}`}
-          onClick={handleHeartTap}
-        >
-          <span className="sparkle-icon">🔮</span>
-          <span className="guide-text">Chạm vào tim để bốc quẻ may mắn nè</span>
-          <span className="pulse-beacon"></span>
-        </div>
-      </div>
+      {/* KHUNG ĐIỀU KHIỂN ĐÁY GỌN GÀNG, CÂN ĐỐI & KHÔNG CHỒNG CHÉO */}
+      <div className="bottom-dock-container">
+        <div className="bottom-actions-row">
+          <button
+            className="dock-action-btn fortune-dock-btn"
+            onClick={handleHeartTap}
+            aria-label="Bốc quẻ may mắn"
+          >
+            <span className="dock-icon">🔮</span>
+            <span className="dock-label">Bốc quẻ may mắn</span>
+            <span className="dock-pulse"></span>
+          </button>
 
-      {/* Nút mở phong bì thư bí mật */}
-      <div
-        className="secret-envelope-btn"
-        onClick={() => {
-          setIsLetterOpen(true)
-          setMusicPlayTrigger(true)
-        }}
-      >
-        <div className="envelope-icon-wrap">
-          <span className="envelope-emoji">💌</span>
-          <span className="envelope-beacon"></span>
+          <button
+            className="dock-action-btn letter-dock-btn"
+            onClick={() => {
+              setIsLetterOpen(true)
+              setMusicPlayTrigger(true)
+            }}
+            aria-label="Thư gửi em"
+          >
+            <span className="dock-icon">💌</span>
+            <span className="dock-label">Thư gửi em</span>
+            <span className="dock-beacon"></span>
+          </button>
         </div>
-        <span className="envelope-text">Thư gửi Mphuong</span>
+
+        <div className="dock-hint-text">
+          <span>✨ Chạm vào tim • Vuốt xoay 360° ✨</span>
+        </div>
       </div>
 
       {/* MODAL THẺ BÀI MA THUẬT GACHA MAY MẮN */}
@@ -278,11 +283,6 @@ export default function App() {
         isOpen={isLetterOpen}
         onClose={() => setIsLetterOpen(false)}
       />
-
-      {/* Gợi ý xoay màn hình ở đáy */}
-      <div className="tap-hint">
-        <span>Vuốt xoay 360° để ngắm trái tim pha lê</span>
-      </div>
     </>
   )
 }
