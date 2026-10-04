@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Scene from './components/Scene'
 import FortuneModal from './components/FortuneModal'
+import SecretLetterModal from './components/SecretLetterModal'
 import MusicPlayer from './components/MusicPlayer'
 import { fortuneCards } from './data/fortuneCards'
 
@@ -77,6 +78,9 @@ export default function App() {
   // State quản lý Modal Bốc quẻ may mắn
   const [isFortuneOpen, setIsFortuneOpen] = useState(false)
   const [currentCard, setCurrentCard] = useState(fortuneCards[0])
+
+  // State quản lý Bức thư bí mật
+  const [isLetterOpen, setIsLetterOpen] = useState(false)
 
   const itemIdRef = useRef(0)
 
@@ -246,12 +250,33 @@ export default function App() {
         </div>
       </div>
 
+      {/* Nút mở phong bì thư bí mật */}
+      <div
+        className="secret-envelope-btn"
+        onClick={() => {
+          setIsLetterOpen(true)
+          setMusicPlayTrigger(true)
+        }}
+      >
+        <div className="envelope-icon-wrap">
+          <span className="envelope-emoji">💌</span>
+          <span className="envelope-beacon"></span>
+        </div>
+        <span className="envelope-text">Thư gửi Mphuong</span>
+      </div>
+
       {/* MODAL THẺ BÀI MA THUẬT GACHA MAY MẮN */}
       <FortuneModal
         card={currentCard}
         isOpen={isFortuneOpen}
         onClose={handleCloseFortune}
         onReroll={handleReroll}
+      />
+
+      {/* MODAL BỨC THƯ TAY BÍ MẬT 3D */}
+      <SecretLetterModal
+        isOpen={isLetterOpen}
+        onClose={() => setIsLetterOpen(false)}
       />
 
       {/* Gợi ý xoay màn hình ở đáy */}
